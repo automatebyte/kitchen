@@ -5,11 +5,14 @@ from random import randint, choice as rc
 
 # Remote library imports
 from faker import Faker
+from werkzeug.security import generate_password_hash
+
+
 
 # Local imports
 from app import app
 from models import db
-
+from models import User, Order, OrderItem
 if __name__ == '__main__':
     fake = Faker()
     with app.app_context():
