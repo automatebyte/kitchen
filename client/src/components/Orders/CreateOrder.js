@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { orderService } from '../../services/orderService';
 
 function CreateOrder() {
   const [orderData, setOrderData] = useState({
@@ -9,12 +10,7 @@ function CreateOrder() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/orders/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-      });
-      const result = await response.json();
+      const result = await orderService.createOrder(orderData);
       console.log('Order created:', result);
       setOrderData({ user_id: 1, total_amount: '' });
     } catch (error) {

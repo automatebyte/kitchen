@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { orderService } from '../../services/orderService';
 
 function OrdersList() {
   const [orders, setOrders] = useState([]);
@@ -9,8 +10,7 @@ function OrdersList() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('/api/orders/');
-      const data = await response.json();
+      const data = await orderService.getOrders();
       setOrders(data);
     } catch (error) {
       console.error('Error fetching orders:', error);
