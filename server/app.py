@@ -10,9 +10,13 @@ from flask_restful import Resource
 from config import app, db
 from routes.user_routes import user_bp
 from routes.order_routes import order_bp
+from routes.menu_routes import menu_bp
+from routes.category_routes import category_bp
 
 app.register_blueprint(user_bp)
 app.register_blueprint(order_bp)
+app.register_blueprint(menu_bp)
+app.register_blueprint(category_bp)
 
 @app.route('/')
 def index():
