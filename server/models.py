@@ -40,6 +40,29 @@ class OrderItem(db.Model, SerializerMixin):
     price = db.Column(db.Float, nullable=False)
     
     serialize_rules = ('-order.order_items',)
+# === MENU & CATEGORY MODELS ===
+class Category(db.Model, SerializerMixin):
+    tablename = 'categories'
 
-# === MENU & CATEGORY MODELS (Teammate's section - DO NOT TOUCH) ===
-# Teammate will add Category and MenuItem models here
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    description = db.Column(db.Text)
+
+    menu_items = db.relationship('MenuItem', backref='category', lazy=True)
+
+    serialize_rules = ('-menu_items.category',)
+
+class MenuItem(db.Model, SerializerMixin):
+    tablename = 'menu_items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    price = db.Column(db.Float, nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+    available = db.Column(db.Boolean, default=True)
+
+    order_items = db.relationship('OrderItem', backref='menu_item', lazy=True)
+
+    serialize_rules = ('-category.menu_items', '-order_items.menu_item')
+
