@@ -32,14 +32,15 @@ class Order(db.Model, SerializerMixin):
     serialize_rules = ('-user.orders', '-order_items.order')
 
 class OrderItem(db.Model, SerializerMixin):
-    __tablename__ = 'order_items'
-    
+    tablename = 'order_items'
+
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    menu_item_id = db.Column(db.Integer, db.ForeignKey('menu_items.id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    
-    serialize_rules = ('-order.order_items',)
+
+    serialize_rules = ('-order.order_items', '-menu_item.order_items')
 # === MENU & CATEGORY MODELS ===
 class Category(db.Model, SerializerMixin):
     tablename = 'categories'
