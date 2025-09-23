@@ -17,6 +17,7 @@ function App() {
         <Route path="/register" component={RegisterPage} />
         <Route path="/orders" component={OrdersPage} />
         <Route path="/profile" component={ProfilePage} />
+        {/* Teammate Routes - Add MenuPage and CategoriesPage here */}
       </Switch>
     </div>
   );
