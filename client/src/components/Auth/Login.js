@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { authService } from '../../services/authService';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -6,9 +7,14 @@ function Login() {
     password: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login:', formData);
+    try {
+      const result = await authService.login(formData);
+      console.log('Login successful:', result);
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
   return (
