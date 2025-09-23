@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+import Home from '../pages/Home';
 
 function App() {
-  return <h1>Project Client</h1>;
+  return (
+    <div className="App">
+      <Switch>
+        <Route exact path="/" component={Home} />
+      </Switch>
+    </div>
+  );
 }
 
 export default App;
