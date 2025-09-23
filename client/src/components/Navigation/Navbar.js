@@ -7,7 +7,8 @@ function Navbar() {
       <Link to="/" style={{ marginRight: '1rem', textDecoration: 'none' }}>Home</Link>
       <Link to="/login" style={{ marginRight: '1rem', textDecoration: 'none' }}>Login</Link>
       <Link to="/register" style={{ marginRight: '1rem', textDecoration: 'none' }}>Register</Link>
-      <Link to="/orders" style={{ textDecoration: 'none' }}>Orders</Link>
+      <Link to="/orders" style={{ marginRight: '1rem', textDecoration: 'none' }}>Orders</Link>
+      <Link to="/profile" style={{ textDecoration: 'none' }}>Profile</Link>
     </nav>
   );
 }

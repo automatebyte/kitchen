@@ -5,6 +5,7 @@ import Home from '../pages/Home';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import OrdersPage from '../pages/OrdersPage';
+import ProfilePage from '../pages/ProfilePage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" component={LoginPage} />
         <Route path="/register" component={RegisterPage} />
         <Route path="/orders" component={OrdersPage} />
+        <Route path="/profile" component={ProfilePage} />
       </Switch>
     </div>
   );
