@@ -6,6 +6,8 @@ import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import OrdersPage from '../pages/OrdersPage';
 import ProfilePage from '../pages/ProfilePage';
+import MenuPage from '../pages/MenuPage';
+import CategoriesPage from '../pages/CategoriesPage';
 
 function App() {
   return (
@@ -17,7 +19,8 @@ function App() {
         <Route path="/register" component={RegisterPage} />
         <Route path="/orders" component={OrdersPage} />
         <Route path="/profile" component={ProfilePage} />
-        {/* Teammate Routes - Add MenuPage and CategoriesPage here */}
+        <Route path="/menu" component={MenuPage} />
+        <Route path="/categories" component={CategoriesPage} />
       </Switch>
     </div>
   );
