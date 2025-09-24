@@ -9,7 +9,8 @@ function Navbar() {
       <Link to="/register" style={{ marginRight: '1rem', textDecoration: 'none' }}>Register</Link>
       <Link to="/orders" style={{ marginRight: '1rem', textDecoration: 'none' }}>Orders</Link>
       <Link to="/profile" style={{ marginRight: '1rem', textDecoration: 'none' }}>Profile</Link>
-      {/* Teammate Links - Add Menu and Categories links here */}
+      <Link to="/menu" style={{ marginRight: '1rem', textDecoration: 'none' }}>Menu</Link>
+      <Link to="/categories" style={{ marginRight: '1rem', textDecoration: 'none' }}>Categories</Link>
     </nav>
   );
 }
