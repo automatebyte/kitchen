@@ -21,3 +21,27 @@ export const createCategory = async (categoryData) => {
   }
   return response.json();
 };
+
+export const updateCategory = async (id, categoryData) => {
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(categoryData),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update category');
+  }
+  return response.json();
+};
+
+export const deleteCategory = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete category');
+  }
+  return response.ok;
+};

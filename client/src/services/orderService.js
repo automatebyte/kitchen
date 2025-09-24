@@ -1,8 +1,9 @@
 const API_BASE = '/api';
 
 export const orderService = {
-  async getOrders() {
-    const response = await fetch(`${API_BASE}/orders/`);
+  async getOrders(userId = null) {
+    const url = userId ? `${API_BASE}/orders/?user_id=${userId}` : `${API_BASE}/orders/`;
+    const response = await fetch(url);
     return response.json();
   },
 
@@ -13,5 +14,26 @@ export const orderService = {
       body: JSON.stringify(orderData)
     });
     return response.json();
+  },
+
+  async getCart(userId) {
+    const response = await fetch(`${API_BASE}/orders/cart/${userId}`);
+    return response.json();
+  },
+
+  async addToCart(cartData) {
+    const response = await fetch(`${API_BASE}/orders/cart`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cartData)
+    });
+    return response.json();
+  },
+
+  async removeFromCart(cartId) {
+    const response = await fetch(`${API_BASE}/orders/cart/${cartId}`, {
+      method: 'DELETE'
+    });
+    return response.ok;
   }
 };

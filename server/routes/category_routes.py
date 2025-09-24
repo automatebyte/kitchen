@@ -17,4 +17,22 @@ def create_category():
     )
     db.session.add(category)
     db.session.commit()
-    return jsonify(category.to_dict()), 201
+    return jsonify({'id': category.id, 'name': category.name}), 201
+
+@category_bp.route('/<int:id>', methods=['PUT'])
+def update_category(id):
+    category = Category.query.get_or_404(id)
+    data = request.get_json()
+    
+    category.name = data['name']
+    category.description = data.get('description')
+    
+    db.session.commit()
+    return jsonify({'id': category.id, 'name': category.name})
+
+@category_bp.route('/<int:id>', methods=['DELETE'])
+def delete_category(id):
+    category = Category.query.get_or_404(id)
+    db.session.delete(category)
+    db.session.commit()
+    return '', 204

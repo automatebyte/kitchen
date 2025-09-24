@@ -21,3 +21,27 @@ export const createMenuItem = async (menuItemData) => {
   }
   return response.json();
 };
+
+export const updateMenuItem = async (id, menuItemData) => {
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(menuItemData),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update menu item');
+  }
+  return response.json();
+};
+
+export const deleteMenuItem = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete menu item');
+  }
+  return response.ok;
+};

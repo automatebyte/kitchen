@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Navbar from './Navigation/Navbar';
+import Footer from './Footer/Footer';
 import Home from '../pages/Home';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
@@ -22,6 +23,7 @@ function App() {
         <Route path="/menu" component={MenuPage} />
         <Route path="/categories" component={CategoriesPage} />
       </Switch>
+      <Footer />
     </div>
   );
 }
