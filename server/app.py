@@ -7,16 +7,20 @@ from flask import request
 from flask_restful import Resource
 
 # Local imports
-from config import app, db, api
-# Add your model imports
+from config import app, db
+from routes.user_routes import user_bp
+from routes.order_routes import order_bp
+from routes.menu_routes import menu_bp
+from routes.category_routes import category_bp
 
-
-# Views go here!
+app.register_blueprint(user_bp)
+app.register_blueprint(order_bp)
+app.register_blueprint(menu_bp)
+app.register_blueprint(category_bp)
 
 @app.route('/')
 def index():
-    return '<h1>Project Server</h1>'
-
+    return '<h1>Kitchen Hub API</h1>'
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
