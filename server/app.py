@@ -26,6 +26,14 @@ app.register_blueprint(auth_bp)
 def index():
     return '<h1>Quick Bite API</h1>'
 
+@app.route('/init-db')
+def init_db():
+    try:
+        db.create_all()
+        return 'Database initialized successfully!'
+    except Exception as e:
+        return f'Error: {str(e)}'
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
 
