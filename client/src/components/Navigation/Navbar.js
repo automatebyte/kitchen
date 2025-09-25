@@ -13,7 +13,7 @@ function Navbar() {
   return (
     <nav>
       <div className="nav-container">
-        <Link to="/" className="nav-brand">Kitchen Hub</Link>
+        <Link to="/" className="nav-brand">Quick Bite</Link>
         
         <div className="nav-links">
           <Link to="/menu">Menu</Link>

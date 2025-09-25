@@ -5,7 +5,7 @@ function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>Kitchen Hub</h3>
+          <h3>Quick Bite</h3>
           <p>Your ultimate destination for delicious meals and exceptional dining experiences. Order online and enjoy premium quality food delivered to your door.</p>
           <div className="social-links">
             <a href="#" aria-label="Facebook">📘</a>
@@ -41,13 +41,13 @@ function Footer() {
           <h3>Contact Info</h3>
           <p>📍 123 Culinary Street, Food City, FC 12345</p>
           <p>📞 +1 (555) 123-4567</p>
-          <p>✉️ info@kitchenhub.com</p>
+          <p>✉️ info@quickbite.com</p>
           <p>🕒 Mon-Fri: 8AM-8PM, Sat-Sun: 9AM-6PM</p>
         </div>
       </div>
       
       <div className="footer-bottom">
-        <p>&copy; 2024 Kitchen Hub. All rights reserved. | Crafted with ❤️ for exceptional dining experiences.</p>
+        <p>&copy; 2024 Quick Bite. All rights reserved. | Crafted with ❤️ for exceptional dining experiences.</p>
       </div>
     </footer>
   );

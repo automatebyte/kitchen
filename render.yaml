@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: kitchen-hub-backend
+    name: quick-bite-backend
     env: python
     buildCommand: "cd server && pip install -r requirements.txt"
     startCommand: "cd server && gunicorn --bind 0.0.0.0:$PORT app:app"
@@ -9,19 +9,19 @@ services:
         value: production
       - key: DATABASE_URL
         fromDatabase:
-          name: kitchen-hub-db
+          name: quick-bite-db
           property: connectionString
 
   - type: web
-    name: kitchen-hub-frontend
+    name: quick-bite-frontend
     env: node
     buildCommand: "cd client && npm install && npm run build"
     startCommand: "cd client && npx serve -s build -l $PORT"
     envVars:
       - key: REACT_APP_API_URL
-        value: https://kitchen-hub-backend.onrender.com
+        value: https://quick-bite-backend.onrender.com
 
 databases:
-  - name: kitchen-hub-db
-    databaseName: kitchen_hub
-    user: kitchen_hub_user
+  - name: quick-bite-db
+    databaseName: quick_bite
+    user: quick_bite_user
