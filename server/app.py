@@ -24,7 +24,7 @@ app.register_blueprint(auth_bp)
 
 @app.route('/')
 def index():
-    return '<h1>Kitchen Hub API</h1>'
+    return '<h1>Quick Bite API</h1>'
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
