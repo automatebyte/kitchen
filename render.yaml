@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: kitchen-hub-backend
+    env: python
+    buildCommand: "cd server && pip install -r requirements.txt"
+    startCommand: "cd server && gunicorn --bind 0.0.0.0:$PORT app:app"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kitchen-hub-db
+          property: connectionString
+
+  - type: web
+    name: kitchen-hub-frontend
+    env: node
+    buildCommand: "cd client && npm install && npm run build"
+    startCommand: "cd client && npx serve -s build -l $PORT"
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://kitchen-hub-backend.onrender.com
+
+databases:
+  - name: kitchen-hub-db
+    databaseName: kitchen_hub
+    user: kitchen_hub_user
