@@ -4,7 +4,7 @@ import { getMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from '..
 import { getCategories } from '../../services/categoryService';
 import { orderService } from '../../services/orderService';
 
-function MenuList() {
+function MenuList({ onAddToCart, userId, isAuthenticated }) {
   const [menuItems, setMenuItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -84,13 +84,11 @@ function MenuList() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this item?')) {
-      try {
-        await deleteMenuItem(id);
-        fetchMenuItems();
-      } catch (error) {
-        console.error('Error deleting menu item:', error);
-      }
+    try {
+      await deleteMenuItem(id);
+      fetchMenuItems();
+    } catch (error) {
+      console.error('Error deleting menu item:', error);
     }
   };
 
@@ -128,16 +126,8 @@ function MenuList() {
   };
 
   const handleAddToCart = async (menuItemId) => {
-    try {
-      await orderService.addToCart({
-        user_id: 1, // For demo - in real app get from auth context
-        menu_item_id: menuItemId,
-        quantity: 1
-      });
-      alert('Item added to cart!');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      alert('Failed to add item to cart');
+    if (onAddToCart) {
+      onAddToCart(menuItemId);
     }
   };
 
@@ -244,7 +234,8 @@ function MenuList() {
               onEdit={handleEdit}
               onDelete={handleDelete}
               onAddToCart={handleAddToCart}
-              userId={1} // For demo - in real app get from auth context
+              userId={userId}
+              isAuthenticated={isAuthenticated}
             />
           ))}
         </div>

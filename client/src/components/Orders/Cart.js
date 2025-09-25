@@ -31,18 +31,15 @@ function Cart({ userId }) {
 
   const createOrder = async () => {
     if (cart.items.length === 0) {
-      alert('Cart is empty');
       return;
     }
 
     setLoading(true);
     try {
       await orderService.createOrder({ user_id: userId });
-      alert('Order created successfully!');
       setCart({ items: [], total: 0 });
     } catch (error) {
       console.error('Error creating order:', error);
-      alert('Failed to create order');
     } finally {
       setLoading(false);
     }

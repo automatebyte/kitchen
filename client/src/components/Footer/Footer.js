@@ -5,8 +5,8 @@ function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>Mvule Catering</h3>
-          <p>Experience exceptional culinary delights with our premium catering services. We bring flavor and elegance to every occasion.</p>
+          <h3>Kitchen Hub</h3>
+          <p>Your ultimate destination for delicious meals and exceptional dining experiences. Order online and enjoy premium quality food delivered to your door.</p>
           <div className="social-links">
             <a href="#" aria-label="Facebook">📘</a>
             <a href="#" aria-label="Twitter">🐦</a>
@@ -41,13 +41,13 @@ function Footer() {
           <h3>Contact Info</h3>
           <p>📍 123 Culinary Street, Food City, FC 12345</p>
           <p>📞 +1 (555) 123-4567</p>
-          <p>✉️ info@mvulecatering.com</p>
+          <p>✉️ info@kitchenhub.com</p>
           <p>🕒 Mon-Fri: 8AM-8PM, Sat-Sun: 9AM-6PM</p>
         </div>
       </div>
       
       <div className="footer-bottom">
-        <p>&copy; 2024 Mvule Catering. All rights reserved. | Crafted with ❤️ for exceptional dining experiences.</p>
+        <p>&copy; 2024 Kitchen Hub. All rights reserved. | Crafted with ❤️ for exceptional dining experiences.</p>
       </div>
     </footer>
   );

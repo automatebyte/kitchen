@@ -27,7 +27,7 @@ const getDefaultFoodImage = (itemName) => {
   return 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop';
 };
 
-function MenuItem({ item, onEdit, onDelete, onAddToCart, userId }) {
+function MenuItem({ item, onEdit, onDelete, onAddToCart, userId, isAuthenticated }) {
   return (
     <div className="menu-item">
       {item.image_url ? (
@@ -55,7 +55,7 @@ function MenuItem({ item, onEdit, onDelete, onAddToCart, userId }) {
         {!item.available && <span className="unavailable">Unavailable</span>}
         
         <div className="action-buttons">
-          {item.available && onAddToCart && userId && (
+          {item.available && onAddToCart && isAuthenticated && (
             <button 
               className="btn btn-primary btn-small"
               onClick={() => onAddToCart(item.id)}

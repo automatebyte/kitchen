@@ -23,7 +23,7 @@ if __name__ == '__main__':
         Category.query.delete()
         User.query.delete()
         
-        # Create categories based on Mvule Catering menu
+        # Create categories
         categories = [
             Category(name="Wings", description="Mouth tantalizing chicken wings with various flavors"),
             Category(name="Wraps", description="Delicious wraps with fresh ingredients"),
@@ -40,19 +40,26 @@ if __name__ == '__main__':
         
         # Create sample users
         users = [
-            User(username='john_doe', email='john@example.com', password_hash=generate_password_hash('password123')),
-            User(username='jane_smith', email='jane@example.com', password_hash=generate_password_hash('password123')),
-            User(username='chef_mike', email='mike@mvulecatering.com', password_hash=generate_password_hash('password123')),
-            User(username='admin', email='admin@mvulecatering.com', password_hash=generate_password_hash('admin123'), is_admin=True),
-            User(username='customer1', email='customer@example.com', password_hash=generate_password_hash('password123'))
+            User(username='john_doe', email='john@example.com', is_admin=False),
+            User(username='jane_smith', email='jane@example.com', is_admin=False),
+            User(username='chef_mike', email='mike@mvulecatering.com', is_admin=False),
+            User(username='admin', email='admin@mvulecatering.com', is_admin=True),
+            User(username='customer1', email='customer@example.com', is_admin=False)
         ]
+        
+        # Set passwords
+        users[0].set_password('password123')
+        users[1].set_password('password123')
+        users[2].set_password('password123')
+        users[3].set_password('admin123')
+        users[4].set_password('password123')
         
         for user in users:
             db.session.add(user)
         
         db.session.commit()
         
-        # Create menu items based on Mvule Catering menu
+        # Create menu items
         menu_items = [
             # Wings
             MenuItem(name="Mouth Tantalizing Chicken Wings", description="Served with fries | 6pc", price=6.50, category_id=1, image_url="https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=400&h=300&fit=crop"),
@@ -103,4 +110,4 @@ if __name__ == '__main__':
         
         db.session.commit()
         
-        print("Seed completed with authentic Mvule Catering menu items!")
+        print("Database seeded successfully!")

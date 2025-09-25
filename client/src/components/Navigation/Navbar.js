@@ -1,16 +1,57 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function Navbar() {
+  const { user, logout, isAuthenticated, isAdmin } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = '/';
+  };
+
   return (
-    <nav style={{ padding: '1rem', backgroundColor: '#f8f9fa', borderBottom: '1px solid #dee2e6' }}>
-      <Link to="/" style={{ marginRight: '1rem', textDecoration: 'none' }}>Home</Link>
-      <Link to="/login" style={{ marginRight: '1rem', textDecoration: 'none' }}>Login</Link>
-      <Link to="/register" style={{ marginRight: '1rem', textDecoration: 'none' }}>Register</Link>
-      <Link to="/orders" style={{ marginRight: '1rem', textDecoration: 'none' }}>Orders</Link>
-      <Link to="/profile" style={{ marginRight: '1rem', textDecoration: 'none' }}>Profile</Link>
-      <Link to="/menu" style={{ marginRight: '1rem', textDecoration: 'none' }}>Menu</Link>
-      <Link to="/categories" style={{ marginRight: '1rem', textDecoration: 'none' }}>Categories</Link>
+    <nav>
+      <div className="nav-container">
+        <Link to="/" className="nav-brand">Kitchen Hub</Link>
+        
+        <div className="nav-links">
+          <Link to="/menu">Menu</Link>
+          {isAuthenticated && (
+            <>
+              <Link to="/cart">Cart</Link>
+              <Link to="/orders">My Orders</Link>
+              {isAdmin && (
+                <Link to="/admin">Admin Dashboard</Link>
+              )}
+            </>
+          )}
+          
+          {isAuthenticated ? (
+            <>
+              <span style={{ 
+                color: 'var(--text-light)', 
+                fontSize: '0.9rem',
+                fontWeight: '500'
+              }}>
+                Welcome, {user?.username}!
+              </span>
+              <button 
+                onClick={handleLogout} 
+                className="btn btn-secondary btn-small"
+                style={{ marginLeft: '0.5rem' }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="btn btn-primary btn-small">Login</Link>
+              <Link to="/register" className="btn btn-secondary btn-small">Register</Link>
+            </>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }

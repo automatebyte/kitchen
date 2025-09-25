@@ -54,13 +54,11 @@ function CategoriesList() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this category?')) {
-      try {
-        await deleteCategory(id);
-        fetchCategories();
-      } catch (error) {
-        console.error('Error deleting category:', error);
-      }
+    try {
+      await deleteCategory(id);
+      fetchCategories();
+    } catch (error) {
+      console.error('Error deleting category:', error);
     }
   };
 
