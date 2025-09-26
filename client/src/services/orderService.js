@@ -31,6 +31,15 @@ export const orderService = {
     return response.json();
   },
 
+  async updateCartQuantity(cartId, quantity) {
+    const response = await fetch(`${API_BASE}/orders/cart/${cartId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity })
+    });
+    return response.json();
+  },
+
   async removeFromCart(cartId) {
     const response = await fetch(`${API_BASE}/orders/cart/${cartId}`, {
       method: 'DELETE'

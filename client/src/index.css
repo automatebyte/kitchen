@@ -460,6 +460,59 @@ nav a:hover::after { width: 100%; }
 /* Action Buttons */
 .action-buttons { display: flex; gap: 0.5rem; margin-top: 1rem; }
 
+/* Cart Controls */
+.cart-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--primary);
+  background: var(--white);
+  color: var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: var(--transition);
+}
+
+.quantity-btn:hover:not(:disabled) {
+  background: var(--primary);
+  color: var(--white);
+  transform: scale(1.1);
+}
+
+.quantity-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity {
+  min-width: 2rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+
 /* Loading */
 .loading {
   text-align: center;
@@ -611,4 +664,13 @@ nav a:hover::after { width: 100%; }
   .nav-brand { font-size: 1.5rem; }
   .card h2 { font-size: 1.5rem; }
   .menu-items { gap: 1rem; }
+  
+  .cart-controls {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .quantity-controls {
+    flex: 1;
+  }
 }

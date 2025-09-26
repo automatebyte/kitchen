@@ -94,6 +94,16 @@ def add_to_cart():
     db.session.commit()
     return jsonify(cart_item.to_dict()), 201
 
+@order_bp.route('/cart/<int:cart_id>', methods=['PATCH'])
+def update_cart_quantity(cart_id):
+    data = request.get_json()
+    quantity = data.get('quantity', 1)
+    
+    cart_item = Cart.query.get_or_404(cart_id)
+    cart_item.quantity = max(1, quantity)
+    db.session.commit()
+    return jsonify(cart_item.to_dict())
+
 @order_bp.route('/cart/<int:cart_id>', methods=['DELETE'])
 def remove_from_cart(cart_id):
     cart_item = Cart.query.get_or_404(cart_id)

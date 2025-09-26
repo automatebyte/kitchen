@@ -20,6 +20,16 @@ function Cart({ userId }) {
     }
   };
 
+  const updateQuantity = async (cartId, newQuantity) => {
+    if (newQuantity < 1) return;
+    try {
+      await orderService.updateCartQuantity(cartId, newQuantity);
+      loadCart();
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
+  };
+
   const removeFromCart = async (cartId) => {
     try {
       await orderService.removeFromCart(cartId);
@@ -62,8 +72,38 @@ function Cart({ userId }) {
             }}>
               <h4>{item.menu_item?.name}</h4>
               <p>Price: ${item.menu_item?.price}</p>
-              <p>Quantity: {item.quantity}</p>
-              <p>Subtotal: ${item.subtotal?.toFixed(2)}</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
+                <span>Quantity:</span>
+                <button 
+                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  disabled={item.quantity <= 1}
+                  style={{ 
+                    backgroundColor: '#6c757d', 
+                    color: 'white', 
+                    border: 'none', 
+                    padding: '0.25rem 0.5rem',
+                    borderRadius: '3px',
+                    cursor: item.quantity <= 1 ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  -
+                </button>
+                <span style={{ minWidth: '2rem', textAlign: 'center' }}>{item.quantity}</span>
+                <button 
+                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  style={{ 
+                    backgroundColor: '#6c757d', 
+                    color: 'white', 
+                    border: 'none', 
+                    padding: '0.25rem 0.5rem',
+                    borderRadius: '3px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  +
+                </button>
+              </div>
+              <p><strong>Subtotal: ${item.subtotal?.toFixed(2)}</strong></p>
               <button 
                 onClick={() => removeFromCart(item.id)}
                 style={{ 

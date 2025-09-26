@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { orderService } from '../../services/orderService';
 
 // Sample food images from Unsplash
@@ -28,6 +28,27 @@ const getDefaultFoodImage = (itemName) => {
 };
 
 function MenuItem({ item, onEdit, onDelete, onAddToCart, userId, isAuthenticated }) {
+  const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = async () => {
+    if (!userId || !isAuthenticated) return;
+    
+    setIsAdding(true);
+    try {
+      await orderService.addToCart({
+        user_id: userId,
+        menu_item_id: item.id,
+        quantity: quantity
+      });
+      if (onAddToCart) onAddToCart(item.id);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
   return (
     <div className="menu-item">
       {item.image_url ? (
@@ -56,12 +77,31 @@ function MenuItem({ item, onEdit, onDelete, onAddToCart, userId, isAuthenticated
         
         <div className="action-buttons">
           {item.available && onAddToCart && isAuthenticated && (
-            <button 
-              className="btn btn-primary btn-small"
-              onClick={() => onAddToCart(item.id)}
-            >
-              Add to Cart
-            </button>
+            <div className="cart-controls">
+              <div className="quantity-controls">
+                <button 
+                  className="quantity-btn"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  disabled={quantity <= 1}
+                >
+                  -
+                </button>
+                <span className="quantity">{quantity}</span>
+                <button 
+                  className="quantity-btn"
+                  onClick={() => setQuantity(quantity + 1)}
+                >
+                  +
+                </button>
+              </div>
+              <button 
+                className="btn btn-primary btn-small"
+                onClick={handleAddToCart}
+                disabled={isAdding}
+              >
+                {isAdding ? 'Adding...' : `Add ${quantity} to Cart`}
+              </button>
+            </div>
           )}
           
           {onEdit && (

@@ -91,3 +91,44 @@ def create_category():
     db.session.add(category)
     db.session.commit()
     return jsonify(category.to_dict()), 201
+
+@admin_bp.route('/categories/<int:category_id>', methods=['PATCH'])
+def update_category(category_id):
+    data = request.get_json()
+    user_id = data.get('user_id')
+    if not check_admin(user_id):
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    category = Category.query.get_or_404(category_id)
+    category.name = data.get('name', category.name)
+    category.description = data.get('description', category.description)
+    db.session.commit()
+    return jsonify(category.to_dict())
+
+@admin_bp.route('/categories/<int:category_id>', methods=['DELETE'])
+def delete_category(category_id):
+    data = request.get_json()
+    user_id = data.get('user_id')
+    if not check_admin(user_id):
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    category = Category.query.get_or_404(category_id)
+    # Check if category has menu items
+    if category.menu_items:
+        return jsonify({'error': 'Cannot delete category with existing menu items'}), 400
+    
+    db.session.delete(category)
+    db.session.commit()
+    return '', 204
+
+@admin_bp.route('/menu-items/<int:item_id>', methods=['DELETE'])
+def delete_menu_item(item_id):
+    data = request.get_json()
+    user_id = data.get('user_id')
+    if not check_admin(user_id):
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    menu_item = MenuItem.query.get_or_404(item_id)
+    db.session.delete(menu_item)
+    db.session.commit()
+    return '', 204
