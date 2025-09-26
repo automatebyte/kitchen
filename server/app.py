@@ -70,5 +70,12 @@ def seed_db():
         return f'Seed Error: {str(e)}'
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+        # Auto-seed if no users exist
+        from models import User
+        if not User.query.first():
+            import subprocess
+            subprocess.run(['python', 'seed.py'])
     app.run(host='0.0.0.0', port=5000, debug=True)
 
