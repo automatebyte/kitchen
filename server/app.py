@@ -34,6 +34,40 @@ def init_db():
     except Exception as e:
         return f'Error: {str(e)}'
 
+@app.route('/seed-db')
+def seed_db():
+    try:
+        from models import User, Category, MenuItem
+        
+        # Create categories
+        categories = [
+            Category(name="Wings", description="Mouth tantalizing chicken wings"),
+            Category(name="Burgers", description="Succulent beef burgers"),
+            Category(name="Fries", description="Crispy combo fries")
+        ]
+        
+        for category in categories:
+            if not Category.query.filter_by(name=category.name).first():
+                db.session.add(category)
+        
+        db.session.commit()
+        
+        # Create menu items
+        menu_items = [
+            MenuItem(name="Chicken Wings", description="6pc wings with fries", price=6.50, category_id=1, available=True),
+            MenuItem(name="Beef Burger", description="Grilled beef burger with slaw", price=6.00, category_id=2, available=True),
+            MenuItem(name="Combo Fries", description="Fries with minced beef topping", price=6.50, category_id=3, available=True)
+        ]
+        
+        for item in menu_items:
+            if not MenuItem.query.filter_by(name=item.name).first():
+                db.session.add(item)
+        
+        db.session.commit()
+        return 'Database seeded successfully!'
+    except Exception as e:
+        return f'Seed Error: {str(e)}'
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
 
