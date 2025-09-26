@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5555';
-console.log('AuthContext API_BASE_URL:', API_BASE_URL);
+const API_BASE_URL = 'http://localhost:5000';
 
 const AuthContext = createContext();
 
@@ -38,10 +37,11 @@ export const AuthProvider = ({ children }) => {
         setUser(data.user);
       } else {
         localStorage.removeItem('token');
+        setUser(null);
       }
     } catch (error) {
-      console.error('Auth check failed:', error);
       localStorage.removeItem('token');
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -59,13 +59,13 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json();
         localStorage.setItem('token', data.token);
         setUser(data.user);
-        return { success: true };
+        return { success: true, user: data.user };
       } else {
         const error = await response.json();
-        return { success: false, error: error.error };
+        return { success: false, error: error.error || 'Invalid credentials' };
       }
     } catch (error) {
-      return { success: false, error: 'Login failed' };
+      return { success: false, error: 'Network error - server not reachable' };
     }
   };
 
@@ -81,23 +81,19 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json();
         localStorage.setItem('token', data.token);
         setUser(data.user);
-        return { success: true };
+        return { success: true, user: data.user };
       } else {
         const error = await response.json();
-        return { success: false, error: error.error };
+        return { success: false, error: error.error || 'Registration failed' };
       }
     } catch (error) {
-      return { success: false, error: 'Registration failed' };
+      return { success: false, error: 'Network error - server not reachable' };
     }
   };
 
-  const logout = async () => {
-    try {
-      localStorage.removeItem('token');
-      setUser(null);
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
   };
 
   const value = {
@@ -107,7 +103,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     loading,
     isAuthenticated: !!user,
-    isAdmin: user?.is_admin || false
+    isAdmin: user?.is_admin === true
   };
 
   return (

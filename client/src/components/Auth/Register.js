@@ -19,7 +19,6 @@ function Register() {
     const result = await register(formData.username, formData.email, formData.password);
     
     if (result.success) {
-
       window.location.href = '/';
     } else {
       setError(result.error);

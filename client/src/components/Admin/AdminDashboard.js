@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5555';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-function AdminDashboard({ userId, isAdmin }) {
+function AdminDashboard() {
+  const { user, isAdmin } = useAuth();
   const [stats, setStats] = useState(null);
   const [orders, setOrders] = useState([]);
 
@@ -15,7 +17,10 @@ function AdminDashboard({ userId, isAdmin }) {
 
   const loadDashboard = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/dashboard?user_id=${userId}`);
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/api/admin/dashboard?user_id=${user?.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await response.json();
       setStats(data);
     } catch (error) {
@@ -25,7 +30,10 @@ function AdminDashboard({ userId, isAdmin }) {
 
   const loadOrders = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/orders/`);
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/api/orders/`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await response.json();
       setOrders(data);
     } catch (error) {
@@ -35,10 +43,14 @@ function AdminDashboard({ userId, isAdmin }) {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
+      const token = localStorage.getItem('token');
       await fetch(`${API_BASE_URL}/api/orders/${orderId}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userId, status: newStatus })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ user_id: user?.id, status: newStatus })
       });
       loadOrders();
     } catch (error) {
