@@ -1,4 +1,5 @@
-const API_BASE_URL = '/api/categories';
+const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5555';
+const API_BASE_URL = `${BACKEND_URL}/api/categories`;
 
 export const getCategories = async () => {
   const response = await fetch(API_BASE_URL);

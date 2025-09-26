@@ -1,4 +1,5 @@
-const API_BASE_URL = '/api/menu';
+const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5555';
+const API_BASE_URL = `${BACKEND_URL}/api/menu`;
 
 export const getMenuItems = async () => {
   const response = await fetch(API_BASE_URL);

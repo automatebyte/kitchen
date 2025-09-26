@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5555';
+
 function AdminDashboard({ userId, isAdmin }) {
   const [stats, setStats] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -13,7 +15,7 @@ function AdminDashboard({ userId, isAdmin }) {
 
   const loadDashboard = async () => {
     try {
-      const response = await fetch(`/api/admin/dashboard?user_id=${userId}`);
+      const response = await fetch(`${API_BASE_URL}/api/admin/dashboard?user_id=${userId}`);
       const data = await response.json();
       setStats(data);
     } catch (error) {
@@ -23,7 +25,7 @@ function AdminDashboard({ userId, isAdmin }) {
 
   const loadOrders = async () => {
     try {
-      const response = await fetch('/api/orders/');
+      const response = await fetch(`${API_BASE_URL}/api/orders/`);
       const data = await response.json();
       setOrders(data);
     } catch (error) {
@@ -33,7 +35,7 @@ function AdminDashboard({ userId, isAdmin }) {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      await fetch(`/api/orders/${orderId}/status`, {
+      await fetch(`${API_BASE_URL}/api/orders/${orderId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: userId, status: newStatus })

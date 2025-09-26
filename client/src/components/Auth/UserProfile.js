@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5555';
+
 function UserProfile() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -10,7 +12,7 @@ function UserProfile() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('/api/users/');
+      const response = await fetch(`${API_BASE_URL}/api/users/`);
       const data = await response.json();
       setUsers(data);
       if (data.length > 0) setSelectedUser(data[0]);
