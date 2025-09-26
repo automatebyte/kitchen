@@ -1,3 +1,4 @@
-bind = "0.0.0.0:5000"
+import os
+bind = "0.0.0.0:" + str(os.environ.get('PORT', 5000))
 workers = 1
 timeout = 120

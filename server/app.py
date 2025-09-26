@@ -7,6 +7,7 @@ from flask import request
 from flask_restful import Resource
 
 # Local imports
+import os
 from config import app, db
 from routes.user_routes import user_bp
 from routes.order_routes import order_bp
@@ -69,5 +70,5 @@ def seed_db():
         return f'Seed Error: {str(e)}'
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
