@@ -1,4 +1,5 @@
-const API_BASE = '/api';
+const BACKEND_URL = process.env.REACT_APP_API_URL || 'http://localhost:5555';
+const API_BASE = `${BACKEND_URL}/api`;
 
 export const orderService = {
   async getOrders(userId = null) {
