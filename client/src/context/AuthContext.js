@@ -23,13 +23,25 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/me`);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
+      } else {
+        localStorage.removeItem('token');
       }
     } catch (error) {
       console.error('Auth check failed:', error);
+      localStorage.removeItem('token');
     } finally {
       setLoading(false);
     }
@@ -45,6 +57,7 @@ export const AuthProvider = ({ children }) => {
       
       if (response.ok) {
         const data = await response.json();
+        localStorage.setItem('token', data.token);
         setUser(data.user);
         return { success: true };
       } else {
@@ -66,6 +79,7 @@ export const AuthProvider = ({ children }) => {
       
       if (response.ok) {
         const data = await response.json();
+        localStorage.setItem('token', data.token);
         setUser(data.user);
         return { success: true };
       } else {
@@ -79,7 +93,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch(`${API_BASE_URL}/api/auth/logout`, { method: 'POST' });
+      localStorage.removeItem('token');
       setUser(null);
     } catch (error) {
       console.error('Logout failed:', error);

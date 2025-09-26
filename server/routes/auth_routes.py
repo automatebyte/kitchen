@@ -1,6 +1,9 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify
 from models import User, db
 from werkzeug.security import check_password_hash
+import jwt
+import datetime
+from functools import wraps
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
@@ -13,17 +16,21 @@ def login():
     user = User.query.filter_by(username=username).first()
     
     if user and user.check_password(password):
-        session['user_id'] = user.id
+        token = jwt.encode({
+            'user_id': user.id,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+        }, 'your-secret-key-change-in-production', algorithm='HS256')
+        
         return jsonify({
             'message': 'Login successful',
-            'user': user.to_dict()
+            'user': user.to_dict(),
+            'token': token
         }), 200
     
     return jsonify({'error': 'Invalid credentials'}), 401
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
-    session.pop('user_id', None)
     return jsonify({'message': 'Logged out successfully'}), 200
 
 @auth_bp.route('/register', methods=['POST'])
@@ -45,20 +52,35 @@ def register():
     db.session.add(user)
     db.session.commit()
     
-    session['user_id'] = user.id
+    token = jwt.encode({
+        'user_id': user.id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+    }, 'your-secret-key-change-in-production', algorithm='HS256')
+    
+    db.session.add(user)
+    db.session.commit()
+    
     return jsonify({
         'message': 'Registration successful',
-        'user': user.to_dict()
+        'user': user.to_dict(),
+        'token': token
     }), 201
 
 @auth_bp.route('/me', methods=['GET'])
 def get_current_user():
-    user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({'error': 'Not authenticated'}), 401
+    token = request.headers.get('Authorization')
+    if not token:
+        return jsonify({'error': 'No token provided'}), 401
     
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    
-    return jsonify({'user': user.to_dict()}), 200
+    try:
+        if token.startswith('Bearer '):
+            token = token[7:]
+        data = jwt.decode(token, 'your-secret-key-change-in-production', algorithms=['HS256'])
+        user = User.query.get(data['user_id'])
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        return jsonify({'user': user.to_dict()}), 200
+    except jwt.ExpiredSignatureError:
+        return jsonify({'error': 'Token expired'}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({'error': 'Invalid token'}), 401
