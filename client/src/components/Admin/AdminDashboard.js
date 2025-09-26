@@ -18,6 +18,7 @@ function AdminDashboard() {
   const [editingMenuItem, setEditingMenuItem] = useState(null);
   const [categoryForm, setCategoryForm] = useState({ name: '', description: '' });
   const [menuForm, setMenuForm] = useState({ name: '', description: '', price: '', category_id: '', image_url: '' });
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     if (isAdmin) {
@@ -25,6 +26,7 @@ function AdminDashboard() {
       loadOrders();
       loadCategories();
       loadMenuItems();
+      loadUsers();
     }
   }, [isAdmin]);
 
@@ -72,10 +74,23 @@ function AdminDashboard() {
     }
   };
 
+  const loadUsers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/api/admin/users?user_id=${user?.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error loading users:', error);
+    }
+  };
+
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`${API_BASE_URL}/api/orders/${orderId}/status`, {
+      await fetch(`${API_BASE_URL}/api/admin/orders/${orderId}/status`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -86,6 +101,40 @@ function AdminDashboard() {
       loadOrders();
     } catch (error) {
       console.error('Error updating order status:', error);
+    }
+  };
+
+  const approveOrder = async (orderId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(`${API_BASE_URL}/api/admin/orders/${orderId}/approve`, {
+        method: 'PATCH',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ user_id: user?.id })
+      });
+      loadOrders();
+    } catch (error) {
+      console.error('Error approving order:', error);
+    }
+  };
+
+  const rejectOrder = async (orderId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(`${API_BASE_URL}/api/admin/orders/${orderId}/reject`, {
+        method: 'PATCH',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ user_id: user?.id })
+      });
+      loadOrders();
+    } catch (error) {
+      console.error('Error rejecting order:', error);
     }
   };
 
@@ -276,17 +325,37 @@ function AdminDashboard() {
                         {new Date(order.created_at).toLocaleDateString()}
                       </td>
                       <td style={{ padding: '1rem', border: '1px solid #ddd' }}>
-                        <select 
-                          value={order.status} 
-                          onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                          style={{ padding: '0.25rem' }}
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="preparing">Preparing</option>
-                          <option value="ready">Ready</option>
-                          <option value="completed">Completed</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
+                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                          {order.status === 'pending' && (
+                            <>
+                              <button 
+                                onClick={() => approveOrder(order.id)}
+                                style={{ padding: '0.25rem 0.5rem', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '3px', fontSize: '0.8rem' }}
+                              >
+                                Approve
+                              </button>
+                              <button 
+                                onClick={() => rejectOrder(order.id)}
+                                style={{ padding: '0.25rem 0.5rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '3px', fontSize: '0.8rem' }}
+                              >
+                                Reject
+                              </button>
+                            </>
+                          )}
+                          <select 
+                            value={order.status} 
+                            onChange={(e) => updateOrderStatus(order.id, e.target.value)}
+                            style={{ padding: '0.25rem', fontSize: '0.8rem' }}
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="preparing">Preparing</option>
+                            <option value="ready">Ready</option>
+                            <option value="completed">Completed</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -438,6 +507,47 @@ function AdminDashboard() {
           </div>
         );
       
+      case 'users':
+        return (
+          <div>
+            <h2>User Management</h2>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ backgroundColor: '#f8f9fa' }}>
+                    <th style={{ padding: '1rem', border: '1px solid #ddd' }}>ID</th>
+                    <th style={{ padding: '1rem', border: '1px solid #ddd' }}>Username</th>
+                    <th style={{ padding: '1rem', border: '1px solid #ddd' }}>Email</th>
+                    <th style={{ padding: '1rem', border: '1px solid #ddd' }}>Admin</th>
+                    <th style={{ padding: '1rem', border: '1px solid #ddd' }}>Created</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map(user => (
+                    <tr key={user.id}>
+                      <td style={{ padding: '1rem', border: '1px solid #ddd' }}>{user.id}</td>
+                      <td style={{ padding: '1rem', border: '1px solid #ddd' }}>{user.username}</td>
+                      <td style={{ padding: '1rem', border: '1px solid #ddd' }}>{user.email}</td>
+                      <td style={{ padding: '1rem', border: '1px solid #ddd' }}>
+                        <span style={{ 
+                          padding: '0.25rem 0.5rem', 
+                          borderRadius: '3px',
+                          backgroundColor: user.is_admin ? '#d4edda' : '#f8f9fa'
+                        }}>
+                          {user.is_admin ? 'Yes' : 'No'}
+                        </span>
+                      </td>
+                      <td style={{ padding: '1rem', border: '1px solid #ddd' }}>
+                        {new Date(user.created_at).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      
       default:
         return null;
     }
@@ -491,6 +601,7 @@ function AdminDashboard() {
           onClick={() => setActiveTab('menu')}
           style={{ 
             padding: '0.5rem 1rem',
+            marginRight: '0.5rem',
             backgroundColor: activeTab === 'menu' ? '#007bff' : '#f8f9fa',
             color: activeTab === 'menu' ? 'white' : 'black',
             border: '1px solid #ddd',
@@ -498,6 +609,18 @@ function AdminDashboard() {
           }}
         >
           Menu Items
+        </button>
+        <button 
+          onClick={() => setActiveTab('users')}
+          style={{ 
+            padding: '0.5rem 1rem',
+            backgroundColor: activeTab === 'users' ? '#007bff' : '#f8f9fa',
+            color: activeTab === 'users' ? 'white' : 'black',
+            border: '1px solid #ddd',
+            borderRadius: '3px'
+          }}
+        >
+          Users
         </button>
       </div>
       

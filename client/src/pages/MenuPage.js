@@ -6,8 +6,9 @@ import { orderService } from '../services/orderService';
 function MenuPage() {
   const { user, isAuthenticated } = useAuth();
 
-  const handleAddToCart = async (menuItemId) => {
+  const handleAddToCart = async (menuItemId, quantity = 1) => {
     if (!isAuthenticated) {
+      alert('Please login to add items to cart');
       return;
     }
     
@@ -15,10 +16,12 @@ function MenuPage() {
       await orderService.addToCart({
         user_id: user.id,
         menu_item_id: menuItemId,
-        quantity: 1
+        quantity: quantity
       });
+      alert('Item added to cart!');
     } catch (error) {
       console.error('Error adding to cart:', error);
+      alert('Failed to add item to cart');
     }
   };
 

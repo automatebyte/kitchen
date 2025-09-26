@@ -11,6 +11,7 @@ import ProfilePage from '../pages/ProfilePage';
 import MenuPage from '../pages/MenuPage';
 import CategoriesPage from '../pages/CategoriesPage';
 import CartPage from '../pages/CartPage';
+import CheckoutPage from '../pages/CheckoutPage';
 import AdminPage from '../pages/AdminPage';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/menu" component={MenuPage} />
           <Route path="/categories" component={CategoriesPage} />
           <Route path="/cart" component={CartPage} />
+          <Route path="/checkout" component={CheckoutPage} />
           <Route path="/admin" component={AdminPage} />
         </Switch>
         <Footer />

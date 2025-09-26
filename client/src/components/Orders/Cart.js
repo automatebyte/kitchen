@@ -126,21 +126,39 @@ function Cart({ userId }) {
             marginTop: '2rem' 
           }}>
             <h3>Total: ${cart.total?.toFixed(2)}</h3>
-            <button 
-              onClick={createOrder}
-              disabled={loading}
-              style={{ 
-                backgroundColor: '#28a745', 
-                color: 'white', 
-                border: 'none', 
-                padding: '1rem 2rem',
-                borderRadius: '5px',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                fontSize: '1.1rem'
-              }}
-            >
-              {loading ? 'Creating Order...' : 'Place Order'}
-            </button>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button 
+                onClick={() => window.location.href = '/checkout'}
+                style={{ 
+                  backgroundColor: '#007bff', 
+                  color: 'white', 
+                  border: 'none', 
+                  padding: '1rem 2rem',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontSize: '1.1rem',
+                  flex: 1
+                }}
+              >
+                Proceed to Checkout
+              </button>
+              <button 
+                onClick={createOrder}
+                disabled={loading}
+                style={{ 
+                  backgroundColor: '#28a745', 
+                  color: 'white', 
+                  border: 'none', 
+                  padding: '1rem 2rem',
+                  borderRadius: '5px',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  fontSize: '1.1rem',
+                  flex: 1
+                }}
+              >
+                {loading ? 'Creating Order...' : 'Quick Order'}
+              </button>
+            </div>
           </div>
         </>
       )}

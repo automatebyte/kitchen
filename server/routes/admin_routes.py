@@ -132,3 +132,40 @@ def delete_menu_item(item_id):
     db.session.delete(menu_item)
     db.session.commit()
     return '', 204
+
+@admin_bp.route('/orders/<int:order_id>/approve', methods=['PATCH'])
+def approve_order(order_id):
+    data = request.get_json()
+    user_id = data.get('user_id')
+    if not check_admin(user_id):
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    order = Order.query.get_or_404(order_id)
+    order.status = 'approved'
+    db.session.commit()
+    return jsonify(order.to_dict())
+
+@admin_bp.route('/orders/<int:order_id>/reject', methods=['PATCH'])
+def reject_order(order_id):
+    data = request.get_json()
+    user_id = data.get('user_id')
+    if not check_admin(user_id):
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    order = Order.query.get_or_404(order_id)
+    order.status = 'rejected'
+    db.session.commit()
+    return jsonify(order.to_dict())
+
+@admin_bp.route('/orders/<int:order_id>/status', methods=['PATCH'])
+def update_order_status_admin(order_id):
+    data = request.get_json()
+    user_id = data.get('user_id')
+    status = data.get('status')
+    if not check_admin(user_id):
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    order = Order.query.get_or_404(order_id)
+    order.status = status
+    db.session.commit()
+    return jsonify(order.to_dict())
