@@ -8,10 +8,10 @@ function Footer() {
           <h3>Quick Bite</h3>
           <p>Your ultimate destination for delicious meals and exceptional dining experiences. Order online and enjoy premium quality food delivered to your door.</p>
           <div className="social-links">
-            <a href="#" aria-label="Facebook">📘</a>
-            <a href="#" aria-label="Twitter">🐦</a>
-            <a href="#" aria-label="Instagram">📷</a>
-            <a href="#" aria-label="LinkedIn">💼</a>
+            <button type="button" aria-label="Facebook" style={{background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.3rem'}}>FB</button>
+            <button type="button" aria-label="Twitter" style={{background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.3rem'}}>TW</button>
+            <button type="button" aria-label="Instagram" style={{background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.3rem'}}>IG</button>
+            <button type="button" aria-label="LinkedIn" style={{background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.3rem'}}>LI</button>
           </div>
         </div>
         

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MenuItem from './MenuItem';
 import { getMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from '../../services/menuService';
 import { getCategories } from '../../services/categoryService';
-import { orderService } from '../../services/orderService';
+
 import { useAuth } from '../../context/AuthContext';
 
 function MenuList({ onAddToCart, userId, isAuthenticated }) {
