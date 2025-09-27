@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { orderService } from '../../services/orderService';
 
 function Navbar() {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.id) {
+      loadCartCount();
+    } else {
+      setCartCount(0);
+    }
+  }, [isAuthenticated, user?.id]);
+
+  const loadCartCount = async () => {
+    try {
+      const cartData = await orderService.getCart(user.id);
+      const count = cartData.items?.reduce((total, item) => total + item.quantity, 0) || 0;
+      setCartCount(count);
+    } catch (error) {
+      setCartCount(0);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -19,7 +39,7 @@ function Navbar() {
           <Link to="/menu">Menu</Link>
           {isAuthenticated && (
             <>
-              <Link to="/cart">Cart</Link>
+              <Link to="/cart">Cart {cartCount > 0 && `(${cartCount})`}</Link>
               <Link to="/orders">My Orders</Link>
               {isAdmin && (
                 <Link to="/admin">Admin Dashboard</Link>

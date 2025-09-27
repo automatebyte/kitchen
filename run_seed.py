@@ -15,14 +15,14 @@ def run_seed():
                               capture_output=True, text=True)
         
         if result.returncode == 0:
-            print("✅ Database seeded successfully!")
+            print("Database seeded successfully!")
             print(result.stdout)
         else:
-            print("❌ Error seeding database:")
+            print("Error seeding database:")
             print(result.stderr)
             
     except Exception as e:
-        print(f"❌ Error running seed: {e}")
+        print(f"Error running seed: {e}")
 
 if __name__ == "__main__":
     run_seed()
