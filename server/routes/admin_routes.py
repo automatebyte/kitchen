@@ -169,3 +169,22 @@ def update_order_status_admin(order_id):
     order.status = status
     db.session.commit()
     return jsonify(order.to_dict())
+
+@admin_bp.route('/cleanup-admin', methods=['GET'])
+def cleanup_admin():
+    # Delete existing admin user and recreate with proper privileges
+    admin_user = User.query.filter_by(username='admin').first()
+    if admin_user:
+        db.session.delete(admin_user)
+    
+    # Create new admin user
+    new_admin = User(
+        username='admin',
+        email='admin@mvulecatering.com',
+        is_admin=True
+    )
+    new_admin.set_password('admin123')
+    db.session.add(new_admin)
+    db.session.commit()
+    
+    return jsonify({'message': 'Admin user recreated successfully', 'user': new_admin.to_dict()})
