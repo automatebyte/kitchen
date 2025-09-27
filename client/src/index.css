@@ -3,14 +3,15 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --primary: #2c5530;
+  --primary: #2d5016;
   --secondary: #4a7c59;
   --accent: #8fbc8f;
-  --gold: #d4af37;
+  --success: #28a745;
   --dark: #1a1a1a;
   --light: #6b7280;
   --bg: #f8fafc;
   --white: #ffffff;
+  --light-green: #e8f5e8;
   --radius: 12px;
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -75,7 +76,7 @@ nav a::after {
   height: 2px;
   bottom: 0;
   left: 0;
-  background: var(--gold);
+  background: var(--success);
   transition: var(--transition);
 }
 
@@ -143,7 +144,7 @@ nav a:hover::after { width: 100%; }
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--gold));
+  background: linear-gradient(90deg, var(--primary), var(--success));
 }
 
 .card:hover {
@@ -206,7 +207,7 @@ nav a:hover::after { width: 100%; }
 }
 
 .btn-accent {
-  background: linear-gradient(135deg, var(--gold) 0%, #b8860b 100%);
+  background: linear-gradient(135deg, var(--success) 0%, var(--secondary) 100%);
   color: var(--white);
   box-shadow: var(--shadow);
 }
@@ -289,7 +290,7 @@ nav a:hover::after { width: 100%; }
 .price {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--success);
   margin-bottom: 0.75rem;
   font-family: 'Playfair Display', serif;
 }
@@ -335,7 +336,7 @@ nav a:hover::after { width: 100%; }
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--gold));
+  background: linear-gradient(90deg, var(--primary), var(--success));
 }
 
 .category-item:hover {
@@ -369,7 +370,7 @@ nav a:hover::after { width: 100%; }
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--gold));
+  background: linear-gradient(90deg, var(--primary), var(--success));
   border-radius: var(--radius) var(--radius) 0 0;
 }
 
@@ -421,7 +422,7 @@ nav a:hover::after { width: 100%; }
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--gold));
+  background: linear-gradient(90deg, var(--primary), var(--success));
   border-radius: var(--radius) var(--radius) 0 0;
 }
 
@@ -645,7 +646,7 @@ nav a:hover::after { width: 100%; }
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--success), transparent);
 }
 
 .footer-content {
@@ -658,7 +659,7 @@ nav a:hover::after { width: 100%; }
 }
 
 .footer-section h3 {
-  color: var(--gold);
+  color: var(--success);
   margin-bottom: 1.5rem;
   font-size: 1.4rem;
   font-family: 'Playfair Display', serif;
@@ -682,7 +683,7 @@ nav a:hover::after { width: 100%; }
 }
 
 .footer-section a:hover {
-  color: var(--gold);
+  color: var(--success);
   transform: translateX(4px);
 }
 
@@ -700,7 +701,7 @@ nav a:hover::after { width: 100%; }
   display: inline-flex;
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, var(--gold), #b8860b);
+  background: linear-gradient(135deg, var(--success), var(--secondary));
   border-radius: 50%;
   align-items: center;
   justify-content: center;
@@ -711,7 +712,7 @@ nav a:hover::after { width: 100%; }
 }
 
 .social-links a:hover {
-  background: linear-gradient(135deg, #b8860b, var(--gold));
+  background: linear-gradient(135deg, var(--secondary), var(--success));
   transform: translateY(-4px) scale(1.1);
   box-shadow: var(--shadow-lg);
 }
