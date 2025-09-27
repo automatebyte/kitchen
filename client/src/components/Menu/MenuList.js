@@ -3,8 +3,10 @@ import MenuItem from './MenuItem';
 import { getMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from '../../services/menuService';
 import { getCategories } from '../../services/categoryService';
 import { orderService } from '../../services/orderService';
+import { useAuth } from '../../context/AuthContext';
 
 function MenuList({ onAddToCart, userId, isAuthenticated }) {
+  const { isAdmin } = useAuth();
   const [menuItems, setMenuItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -166,11 +168,13 @@ function MenuList({ onAddToCart, userId, isAuthenticated }) {
         </div>
       </div>
       
-      <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-        {showForm ? 'Cancel' : editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
-      </button>
+      {isAdmin && (
+        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel' : editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
+        </button>
+      )}
       
-      {showForm && (
+      {showForm && isAdmin && (
         <div className="form-container">
           <h3>{editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}</h3>
           <form onSubmit={handleSubmit}>
@@ -231,8 +235,8 @@ function MenuList({ onAddToCart, userId, isAuthenticated }) {
             <MenuItem 
               key={item.id} 
               item={item} 
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+              onEdit={isAdmin ? handleEdit : null}
+              onDelete={isAdmin ? handleDelete : null}
               onAddToCart={handleAddToCart}
               userId={userId}
               isAuthenticated={isAuthenticated}
