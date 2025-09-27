@@ -47,11 +47,11 @@ if __name__ == '__main__':
             User(username='customer1', email='customer@example.com', is_admin=False)
         ]
         
-        # Set passwords
+        # Set passwords (using simple password storage for demo)
         users[0].set_password('password123')
         users[1].set_password('password123')
         users[2].set_password('password123')
-        users[3].set_password('admin123')
+        users[3].set_password('admin123')  # Admin user
         users[4].set_password('password123')
         
         for user in users:

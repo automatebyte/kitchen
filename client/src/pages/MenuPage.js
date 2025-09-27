@@ -1,14 +1,19 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useHistory } from 'react-router-dom';
 import MenuList from '../components/Menu/MenuList';
 import { orderService } from '../services/orderService';
 
 function MenuPage() {
   const { user, isAuthenticated } = useAuth();
+  const history = useHistory();
 
   const handleAddToCart = async (menuItemId, quantity = 1) => {
     if (!isAuthenticated) {
-      alert('Please login to add items to cart');
+      const shouldLogin = window.confirm('Please login to add items to cart. Would you like to go to the login page?');
+      if (shouldLogin) {
+        history.push('/login');
+      }
       return;
     }
     

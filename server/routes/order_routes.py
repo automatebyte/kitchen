@@ -82,6 +82,16 @@ def add_to_cart():
     if not all([user_id, menu_item_id]):
         return jsonify({'error': 'User ID and Menu Item ID required'}), 400
     
+    # Verify user exists and is authenticated
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'Invalid user'}), 401
+    
+    # Verify menu item exists and is available
+    menu_item = MenuItem.query.get(menu_item_id)
+    if not menu_item or not menu_item.available:
+        return jsonify({'error': 'Menu item not available'}), 400
+    
     # Check if item exists in cart
     cart_item = Cart.query.filter_by(user_id=user_id, menu_item_id=menu_item_id).first()
     

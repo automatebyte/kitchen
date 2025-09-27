@@ -5,7 +5,7 @@ import sys
 import os
 
 def run_seed():
-    """Run the seed script to populate the database with sample data"""
+    """Run the seed script to populate the database"""
     try:
         # Change to server directory
         os.chdir('server')

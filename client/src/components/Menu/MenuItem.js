@@ -32,7 +32,10 @@ function MenuItem({ item, onEdit, onDelete, onAddToCart, userId, isAuthenticated
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = async () => {
-    if (!userId || !isAuthenticated) return;
+    if (!userId || !isAuthenticated) {
+      if (onAddToCart) onAddToCart(item.id);
+      return;
+    }
     
     setIsAdding(true);
     try {
@@ -76,31 +79,42 @@ function MenuItem({ item, onEdit, onDelete, onAddToCart, userId, isAuthenticated
         {!item.available && <span className="unavailable">Unavailable</span>}
         
         <div className="action-buttons">
-          {item.available && onAddToCart && isAuthenticated && (
+          {item.available && (
             <div className="cart-controls">
-              <div className="quantity-controls">
+              {isAuthenticated ? (
+                <>
+                  <div className="quantity-controls">
+                    <button 
+                      className="quantity-btn"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      disabled={quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <span className="quantity">{quantity}</span>
+                    <button 
+                      className="quantity-btn"
+                      onClick={() => setQuantity(quantity + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <button 
+                    className="btn btn-primary btn-small"
+                    onClick={handleAddToCart}
+                    disabled={isAdding}
+                  >
+                    {isAdding ? 'Adding...' : `Add ${quantity} to Cart`}
+                  </button>
+                </>
+              ) : (
                 <button 
-                  className="quantity-btn"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={quantity <= 1}
+                  className="btn btn-outline btn-small"
+                  onClick={() => onAddToCart && onAddToCart(item.id)}
                 >
-                  -
+                  Login to Add to Cart
                 </button>
-                <span className="quantity">{quantity}</span>
-                <button 
-                  className="quantity-btn"
-                  onClick={() => setQuantity(quantity + 1)}
-                >
-                  +
-                </button>
-              </div>
-              <button 
-                className="btn btn-primary btn-small"
-                onClick={handleAddToCart}
-                disabled={isAdding}
-              >
-                {isAdding ? 'Adding...' : `Add ${quantity} to Cart`}
-              </button>
+              )}
             </div>
           )}
           
