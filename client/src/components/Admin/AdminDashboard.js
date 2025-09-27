@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { useAuth } from '../../context/AuthContext';
 import { getCategories } from '../../services/categoryService';
 import { getMenuItems } from '../../services/menuService';
@@ -16,8 +18,18 @@ function AdminDashboard() {
   const [showMenuForm, setShowMenuForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [editingMenuItem, setEditingMenuItem] = useState(null);
-  const [categoryForm, setCategoryForm] = useState({ name: '', description: '' });
-  const [menuForm, setMenuForm] = useState({ name: '', description: '', price: '', category_id: '', image_url: '' });
+  const categoryValidationSchema = Yup.object({
+    name: Yup.string().min(2, 'Name must be at least 2 characters').required('Name is required'),
+    description: Yup.string().max(200, 'Description must be less than 200 characters')
+  });
+
+  const menuValidationSchema = Yup.object({
+    name: Yup.string().min(2, 'Name must be at least 2 characters').required('Name is required'),
+    description: Yup.string().max(500, 'Description must be less than 500 characters'),
+    price: Yup.number().positive('Price must be positive').required('Price is required'),
+    category_id: Yup.number().required('Category is required'),
+    image_url: Yup.string().url('Must be a valid URL')
+  });
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -138,8 +150,7 @@ function AdminDashboard() {
     }
   };
 
-  const handleCategorySubmit = async (e) => {
-    e.preventDefault();
+  const handleCategorySubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const token = localStorage.getItem('token');
       const url = editingCategory 
@@ -153,20 +164,20 @@ function AdminDashboard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ ...categoryForm, user_id: user?.id })
+        body: JSON.stringify({ ...values, user_id: user?.id })
       });
       
-      setCategoryForm({ name: '', description: '' });
+      resetForm();
       setEditingCategory(null);
       setShowCategoryForm(false);
       loadCategories();
     } catch (error) {
       console.error('Error saving category:', error);
     }
+    setSubmitting(false);
   };
 
-  const handleMenuSubmit = async (e) => {
-    e.preventDefault();
+  const handleMenuSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const token = localStorage.getItem('token');
       const url = editingMenuItem 
@@ -175,9 +186,9 @@ function AdminDashboard() {
       const method = editingMenuItem ? 'PATCH' : 'POST';
       
       const formData = {
-        ...menuForm,
-        price: parseFloat(menuForm.price),
-        category_id: parseInt(menuForm.category_id),
+        ...values,
+        price: parseFloat(values.price),
+        category_id: parseInt(values.category_id),
         user_id: user?.id
       };
       
@@ -190,13 +201,14 @@ function AdminDashboard() {
         body: JSON.stringify(formData)
       });
       
-      setMenuForm({ name: '', description: '', price: '', category_id: '', image_url: '' });
+      resetForm();
       setEditingMenuItem(null);
       setShowMenuForm(false);
       loadMenuItems();
     } catch (error) {
       console.error('Error saving menu item:', error);
     }
+    setSubmitting(false);
   };
 
   const deleteCategory = async (categoryId) => {
@@ -239,19 +251,11 @@ function AdminDashboard() {
 
   const editCategory = (category) => {
     setEditingCategory(category);
-    setCategoryForm({ name: category.name, description: category.description || '' });
     setShowCategoryForm(true);
   };
 
   const editMenuItem = (item) => {
     setEditingMenuItem(item);
-    setMenuForm({
-      name: item.name,
-      description: item.description || '',
-      price: item.price.toString(),
-      category_id: item.category_id.toString(),
-      image_url: item.image_url || ''
-    });
     setShowMenuForm(true);
   };
 
@@ -379,29 +383,43 @@ function AdminDashboard() {
             </div>
             
             {showCategoryForm && (
-              <form onSubmit={handleCategorySubmit} style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ddd', borderRadius: '5px' }}>
-                <h3>{editingCategory ? 'Edit Category' : 'Add New Category'}</h3>
-                <input
-                  type="text"
-                  placeholder="Category Name"
-                  value={categoryForm.name}
-                  onChange={(e) => setCategoryForm({...categoryForm, name: e.target.value})}
-                  required
-                  style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-                />
-                <textarea
-                  placeholder="Description"
-                  value={categoryForm.description}
-                  onChange={(e) => setCategoryForm({...categoryForm, description: e.target.value})}
-                  style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-                />
-                <button type="submit" style={{ padding: '0.5rem 1rem', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '3px', marginRight: '1rem' }}>
-                  {editingCategory ? 'Update' : 'Create'}
-                </button>
-                <button type="button" onClick={() => { setShowCategoryForm(false); setEditingCategory(null); setCategoryForm({ name: '', description: '' }); }} style={{ padding: '0.5rem 1rem', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '3px' }}>
-                  Cancel
-                </button>
-              </form>
+              <Formik
+                initialValues={{
+                  name: editingCategory?.name || '',
+                  description: editingCategory?.description || ''
+                }}
+                validationSchema={categoryValidationSchema}
+                onSubmit={handleCategorySubmit}
+                enableReinitialize
+              >
+                {({ isSubmitting }) => (
+                  <Form style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ddd', borderRadius: '5px' }}>
+                    <h3>{editingCategory ? 'Edit Category' : 'Add New Category'}</h3>
+                    <Field
+                      type="text"
+                      name="name"
+                      placeholder="Category Name"
+                      style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
+                    />
+                    <ErrorMessage name="name" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
+                    
+                    <Field
+                      as="textarea"
+                      name="description"
+                      placeholder="Description"
+                      style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
+                    />
+                    <ErrorMessage name="description" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
+                    
+                    <button type="submit" disabled={isSubmitting} style={{ padding: '0.5rem 1rem', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '3px', marginRight: '1rem' }}>
+                      {isSubmitting ? 'Saving...' : editingCategory ? 'Update' : 'Create'}
+                    </button>
+                    <button type="button" onClick={() => { setShowCategoryForm(false); setEditingCategory(null); }} style={{ padding: '0.5rem 1rem', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '3px' }}>
+                      Cancel
+                    </button>
+                  </Form>
+                )}
+              </Formik>
             )}
             
             <div style={{ display: 'grid', gap: '1rem' }}>
@@ -435,56 +453,76 @@ function AdminDashboard() {
             </div>
             
             {showMenuForm && (
-              <form onSubmit={handleMenuSubmit} style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ddd', borderRadius: '5px' }}>
-                <h3>{editingMenuItem ? 'Edit Menu Item' : 'Add New Menu Item'}</h3>
-                <input
-                  type="text"
-                  placeholder="Item Name"
-                  value={menuForm.name}
-                  onChange={(e) => setMenuForm({...menuForm, name: e.target.value})}
-                  required
-                  style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-                />
-                <textarea
-                  placeholder="Description"
-                  value={menuForm.description}
-                  onChange={(e) => setMenuForm({...menuForm, description: e.target.value})}
-                  style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-                />
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Price"
-                  value={menuForm.price}
-                  onChange={(e) => setMenuForm({...menuForm, price: e.target.value})}
-                  required
-                  style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-                />
-                <select
-                  value={menuForm.category_id}
-                  onChange={(e) => setMenuForm({...menuForm, category_id: e.target.value})}
-                  required
-                  style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-                >
-                  <option value="">Select Category</option>
-                  {categories.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-                <input
-                  type="url"
-                  placeholder="Image URL (optional)"
-                  value={menuForm.image_url}
-                  onChange={(e) => setMenuForm({...menuForm, image_url: e.target.value})}
-                  style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
-                />
-                <button type="submit" style={{ padding: '0.5rem 1rem', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '3px', marginRight: '1rem' }}>
-                  {editingMenuItem ? 'Update' : 'Create'}
-                </button>
-                <button type="button" onClick={() => { setShowMenuForm(false); setEditingMenuItem(null); setMenuForm({ name: '', description: '', price: '', category_id: '', image_url: '' }); }} style={{ padding: '0.5rem 1rem', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '3px' }}>
-                  Cancel
-                </button>
-              </form>
+              <Formik
+                initialValues={{
+                  name: editingMenuItem?.name || '',
+                  description: editingMenuItem?.description || '',
+                  price: editingMenuItem?.price || '',
+                  category_id: editingMenuItem?.category_id || '',
+                  image_url: editingMenuItem?.image_url || ''
+                }}
+                validationSchema={menuValidationSchema}
+                onSubmit={handleMenuSubmit}
+                enableReinitialize
+              >
+                {({ isSubmitting }) => (
+                  <Form style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ddd', borderRadius: '5px' }}>
+                    <h3>{editingMenuItem ? 'Edit Menu Item' : 'Add New Menu Item'}</h3>
+                    
+                    <Field
+                      type="text"
+                      name="name"
+                      placeholder="Item Name"
+                      style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
+                    />
+                    <ErrorMessage name="name" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
+                    
+                    <Field
+                      as="textarea"
+                      name="description"
+                      placeholder="Description"
+                      style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
+                    />
+                    <ErrorMessage name="description" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
+                    
+                    <Field
+                      type="number"
+                      step="0.01"
+                      name="price"
+                      placeholder="Price"
+                      style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
+                    />
+                    <ErrorMessage name="price" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
+                    
+                    <Field
+                      as="select"
+                      name="category_id"
+                      style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </Field>
+                    <ErrorMessage name="category_id" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
+                    
+                    <Field
+                      type="url"
+                      name="image_url"
+                      placeholder="Image URL (optional)"
+                      style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
+                    />
+                    <ErrorMessage name="image_url" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
+                    
+                    <button type="submit" disabled={isSubmitting} style={{ padding: '0.5rem 1rem', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '3px', marginRight: '1rem' }}>
+                      {isSubmitting ? 'Saving...' : editingMenuItem ? 'Update' : 'Create'}
+                    </button>
+                    <button type="button" onClick={() => { setShowMenuForm(false); setEditingMenuItem(null); }} style={{ padding: '0.5rem 1rem', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '3px' }}>
+                      Cancel
+                    </button>
+                  </Form>
+                )}
+              </Formik>
             )}
             
             <div style={{ display: 'grid', gap: '1rem' }}>
