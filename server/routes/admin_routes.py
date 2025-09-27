@@ -172,19 +172,25 @@ def update_order_status_admin(order_id):
 
 @admin_bp.route('/cleanup-admin', methods=['GET'])
 def cleanup_admin():
-    # Delete existing admin user and recreate with proper privileges
-    admin_user = User.query.filter_by(username='admin').first()
-    if admin_user:
-        db.session.delete(admin_user)
-    
-    # Create new admin user
-    new_admin = User(
-        username='admin',
-        email='admin@mvulecatering.com',
-        is_admin=True
-    )
-    new_admin.set_password('admin123')
-    db.session.add(new_admin)
-    db.session.commit()
-    
-    return jsonify({'message': 'Admin user recreated successfully', 'user': new_admin.to_dict()})
+    try:
+        # Update existing admin user instead of deleting
+        admin_user = User.query.filter_by(username='admin').first()
+        if admin_user:
+            admin_user.is_admin = True
+            admin_user.set_password('admin123')
+            db.session.commit()
+            return jsonify({'message': 'Admin user updated successfully', 'user': admin_user.to_dict()})
+        else:
+            # Create new admin user if doesn't exist
+            new_admin = User(
+                username='admin',
+                email='admin@mvulecatering.com',
+                is_admin=True
+            )
+            new_admin.set_password('admin123')
+            db.session.add(new_admin)
+            db.session.commit()
+            return jsonify({'message': 'Admin user created successfully', 'user': new_admin.to_dict()})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
