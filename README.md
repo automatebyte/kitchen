@@ -5,6 +5,7 @@ A full-stack restaurant management application built with Flask and React, featu
 ## Live Demo
 
 **Application URL:** https://kitchen-1-estc.onrender.com
+**Backend API URL:** https://kitchen-4tp1.onrender.com
 
 **Admin Credentials:**
 - Username: `admin`
