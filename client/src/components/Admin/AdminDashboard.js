@@ -14,6 +14,11 @@ function AdminDashboard() {
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [showMenuForm, setShowMenuForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
@@ -609,7 +614,7 @@ function AdminDashboard() {
       
       <div style={{ marginBottom: '2rem' }}>
         <button 
-          onClick={() => setActiveTab('dashboard')}
+          onClick={() => handleTabChange('dashboard')}
           style={{ 
             padding: '0.5rem 1rem', 
             marginRight: '0.5rem',
@@ -622,7 +627,7 @@ function AdminDashboard() {
           Dashboard
         </button>
         <button 
-          onClick={() => setActiveTab('orders')}
+          onClick={() => handleTabChange('orders')}
           style={{ 
             padding: '0.5rem 1rem', 
             marginRight: '0.5rem',
@@ -635,7 +640,7 @@ function AdminDashboard() {
           Orders
         </button>
         <button 
-          onClick={() => setActiveTab('categories')}
+          onClick={() => handleTabChange('categories')}
           style={{ 
             padding: '0.5rem 1rem', 
             marginRight: '0.5rem',
@@ -648,7 +653,7 @@ function AdminDashboard() {
           Categories
         </button>
         <button 
-          onClick={() => setActiveTab('menu')}
+          onClick={() => handleTabChange('menu'))
           style={{ 
             padding: '0.5rem 1rem',
             marginRight: '0.5rem',
@@ -661,7 +666,7 @@ function AdminDashboard() {
           Menu Items
         </button>
         <button 
-          onClick={() => setActiveTab('users')}
+          onClick={() => handleTabChange('users'))
           style={{ 
             padding: '0.5rem 1rem',
             backgroundColor: activeTab === 'users' ? '#007bff' : '#f8f9fa',

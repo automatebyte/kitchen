@@ -97,11 +97,13 @@ function MenuList({ onAddToCart, userId, isAuthenticated }) {
   const handleSearch = (term) => {
     setSearchTerm(term);
     filterItems(term, selectedCategory);
+    if (term) window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleCategoryFilter = (categoryId) => {
     setSelectedCategory(categoryId);
     filterItems(searchTerm, categoryId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const filterItems = (search, category) => {

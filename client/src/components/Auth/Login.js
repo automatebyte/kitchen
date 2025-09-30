@@ -22,6 +22,7 @@ function Login() {
     const result = await login(values.username, values.password);
     
     if (result.success) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       window.location.href = '/';
     } else {
       setError(result.error);

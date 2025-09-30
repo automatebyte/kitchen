@@ -27,22 +27,27 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     window.location.href = '/';
+  };
+
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <nav>
       <div className="nav-container">
-        <Link to="/" className="nav-brand">Quick Bite</Link>
+        <Link to="/" className="nav-brand" onClick={handleNavClick}>Quick Bite</Link>
         
         <div className="nav-links">
-          <Link to="/menu">Menu</Link>
+          <Link to="/menu" onClick={handleNavClick}>Menu</Link>
           {isAuthenticated && (
             <>
-              <Link to="/cart">Cart {cartCount > 0 && `(${cartCount})`}</Link>
-              <Link to="/orders">My Orders</Link>
+              <Link to="/cart" onClick={handleNavClick}>Cart {cartCount > 0 && `(${cartCount})`}</Link>
+              <Link to="/orders" onClick={handleNavClick}>My Orders</Link>
               {isAdmin && (
-                <Link to="/admin">Admin Dashboard</Link>
+                <Link to="/admin" onClick={handleNavClick}>Admin Dashboard</Link>
               )}
             </>
           )}
@@ -66,8 +71,8 @@ function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-primary btn-small">Login</Link>
-              <Link to="/register" className="btn btn-secondary btn-small">Register</Link>
+              <Link to="/login" className="btn btn-primary btn-small" onClick={handleNavClick}>Login</Link>
+              <Link to="/register" className="btn btn-secondary btn-small" onClick={handleNavClick}>Register</Link>
             </>
           )}
         </div>
