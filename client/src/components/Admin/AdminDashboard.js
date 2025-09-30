@@ -522,10 +522,13 @@ function AdminDashboard() {
                     <Field
                       type="url"
                       name="image_url"
-                      placeholder="Image URL (optional) - e.g., https://example.com/image.jpg"
+                      placeholder="Paste image URL from internet - e.g., https://images.unsplash.com/photo-123.jpg"
                       style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
                     />
-                    <ErrorMessage name="image_url" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
+                    <ErrorMessage name="image_url" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '0.5rem' }} />
+                    <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
+                      💡 Tip: Right-click any image online → "Copy image address" → Paste here
+                    </div>
                     
                     <button type="submit" disabled={isSubmitting} style={{ padding: '0.5rem 1rem', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '3px', marginRight: '1rem' }}>
                       {isSubmitting ? 'Saving...' : editingMenuItem ? 'Update' : 'Create'}

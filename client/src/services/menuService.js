@@ -10,10 +10,12 @@ export const getMenuItems = async () => {
 };
 
 export const createMenuItem = async (menuItemData) => {
-  const response = await fetch(API_BASE_URL, {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BACKEND_URL}/api/admin/menu-items`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify(menuItemData),
   });
@@ -24,10 +26,12 @@ export const createMenuItem = async (menuItemData) => {
 };
 
 export const updateMenuItem = async (id, menuItemData) => {
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
-    method: 'PUT',
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BACKEND_URL}/api/admin/menu-items/${id}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify(menuItemData),
   });
@@ -38,8 +42,14 @@ export const updateMenuItem = async (id, menuItemData) => {
 };
 
 export const deleteMenuItem = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BACKEND_URL}/api/admin/menu-items/${id}`, {
     method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem('user'))?.id }),
   });
   if (!response.ok) {
     throw new Error('Failed to delete menu item');

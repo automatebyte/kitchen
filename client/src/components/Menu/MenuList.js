@@ -52,10 +52,12 @@ function MenuList({ onAddToCart, userId, isAuthenticated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const user = JSON.parse(localStorage.getItem('user'));
       const itemData = {
         ...formData,
         price: parseFloat(formData.price),
-        category_id: parseInt(formData.category_id)
+        category_id: parseInt(formData.category_id),
+        user_id: user?.id
       };
       
       if (editingItem) {
@@ -67,9 +69,12 @@ function MenuList({ onAddToCart, userId, isAuthenticated }) {
       
       setFormData({ name: '', description: '', price: '', category_id: '', image_url: '' });
       setShowForm(false);
-      fetchMenuItems();
+      await fetchMenuItems();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      alert(editingItem ? 'Menu item updated successfully!' : 'Menu item created successfully!');
     } catch (error) {
       console.error('Error saving menu item:', error);
+      alert('Failed to save menu item. Please try again.');
     }
   };
 
@@ -211,10 +216,13 @@ function MenuList({ onAddToCart, userId, isAuthenticated }) {
             />
             <input
               type="url"
-              placeholder="Image URL (optional)"
+              placeholder="Paste image URL from internet - e.g., https://images.unsplash.com/photo-123.jpg"
               value={formData.image_url}
               onChange={(e) => setFormData({...formData, image_url: e.target.value})}
             />
+            <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '0.5rem' }}>
+              💡 Right-click any image online → "Copy image address" → Paste here
+            </div>
             <select
               value={formData.category_id}
               onChange={(e) => setFormData({...formData, category_id: e.target.value})}
