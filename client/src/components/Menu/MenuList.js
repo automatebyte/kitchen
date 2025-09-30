@@ -83,14 +83,19 @@ function MenuList({ onAddToCart, userId, isAuthenticated }) {
       image_url: item.image_url || ''
     });
     setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this menu item?')) return;
+    
     try {
       await deleteMenuItem(id);
       fetchMenuItems();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error deleting menu item:', error);
+      alert('Failed to delete menu item. Please try again.');
     }
   };
 
@@ -171,7 +176,10 @@ function MenuList({ onAddToCart, userId, isAuthenticated }) {
       </div>
       
       {isAdmin && (
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+        <button className="btn btn-primary" onClick={() => {
+          setShowForm(!showForm);
+          if (!showForm) window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}>
           {showForm ? 'Cancel' : editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
         </button>
       )}

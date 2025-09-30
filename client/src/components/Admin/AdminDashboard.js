@@ -257,11 +257,13 @@ function AdminDashboard() {
   const editCategory = (category) => {
     setEditingCategory(category);
     setShowCategoryForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const editMenuItem = (item) => {
     setEditingMenuItem(item);
     setShowMenuForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (!isAdmin) {
@@ -380,7 +382,10 @@ function AdminDashboard() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
               <h2>Category Management</h2>
               <button 
-                onClick={() => setShowCategoryForm(!showCategoryForm)}
+                onClick={() => {
+                  setShowCategoryForm(!showCategoryForm);
+                  if (!showCategoryForm) window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '3px' }}
               >
                 Add Category
@@ -450,7 +455,10 @@ function AdminDashboard() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
               <h2>Menu Management</h2>
               <button 
-                onClick={() => setShowMenuForm(!showMenuForm)}
+                onClick={() => {
+                  setShowMenuForm(!showMenuForm);
+                  if (!showMenuForm) window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '3px' }}
               >
                 Add Menu Item
