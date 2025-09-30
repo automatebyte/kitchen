@@ -45,8 +45,11 @@ function MenuItem({ item, onEdit, onDelete, onAddToCart, userId, isAuthenticated
         quantity: quantity
       });
       if (onAddToCart) onAddToCart(item.id);
+      // Reset quantity after successful add
+      setQuantity(1);
     } catch (error) {
       console.error('Error adding to cart:', error);
+      alert('Failed to add item to cart. Please try again.');
     } finally {
       setIsAdding(false);
     }

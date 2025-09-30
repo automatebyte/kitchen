@@ -509,7 +509,7 @@ function AdminDashboard() {
                     <Field
                       type="url"
                       name="image_url"
-                      placeholder="Image URL (optional)"
+                      placeholder="Image URL (optional) - e.g., https://example.com/image.jpg"
                       style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
                     />
                     <ErrorMessage name="image_url" component="div" style={{ color: 'red', fontSize: '0.8rem', marginBottom: '1rem' }} />
@@ -527,18 +527,30 @@ function AdminDashboard() {
             
             <div style={{ display: 'grid', gap: '1rem' }}>
               {menuItems.map(item => (
-                <div key={item.id} style={{ padding: '1rem', border: '1px solid #ddd', borderRadius: '5px' }}>
-                  <h4>{item.name}</h4>
-                  <p>{item.description}</p>
-                  <p><strong>Price: ${item.price}</strong></p>
-                  <p>Category: {item.category?.name}</p>
-                  <p>Available: {item.available ? 'Yes' : 'No'}</p>
-                  <button onClick={() => editMenuItem(item)} style={{ padding: '0.25rem 0.5rem', backgroundColor: '#ffc107', color: 'black', border: 'none', borderRadius: '3px', marginRight: '0.5rem' }}>
-                    Edit
-                  </button>
-                  <button onClick={() => deleteMenuItem(item.id)} style={{ padding: '0.25rem 0.5rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '3px' }}>
-                    Delete
-                  </button>
+                <div key={item.id} style={{ padding: '1rem', border: '1px solid #ddd', borderRadius: '5px', display: 'flex', gap: '1rem' }}>
+                  {item.image_url && (
+                    <img 
+                      src={item.image_url} 
+                      alt={item.name}
+                      style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '5px' }}
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                  )}
+                  <div style={{ flex: 1 }}>
+                    <h4>{item.name}</h4>
+                    <p>{item.description}</p>
+                    <p><strong>Price: ${item.price}</strong></p>
+                    <p>Category: {item.category?.name}</p>
+                    <p>Available: {item.available ? 'Yes' : 'No'}</p>
+                    <div style={{ marginTop: '0.5rem' }}>
+                      <button onClick={() => editMenuItem(item)} style={{ padding: '0.25rem 0.5rem', backgroundColor: '#ffc107', color: 'black', border: 'none', borderRadius: '3px', marginRight: '0.5rem' }}>
+                        Edit
+                      </button>
+                      <button onClick={() => deleteMenuItem(item.id)} style={{ padding: '0.25rem 0.5rem', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '3px' }}>
+                        Delete
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
