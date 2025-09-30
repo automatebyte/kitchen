@@ -661,7 +661,7 @@ function AdminDashboard() {
           Categories
         </button>
         <button 
-          onClick={() => handleTabChange('menu'))
+          onClick={() => handleTabChange('menu')}
           style={{ 
             padding: '0.5rem 1rem',
             marginRight: '0.5rem',
@@ -674,7 +674,7 @@ function AdminDashboard() {
           Menu Items
         </button>
         <button 
-          onClick={() => handleTabChange('users'))
+          onClick={() => handleTabChange('users')}
           style={{ 
             padding: '0.5rem 1rem',
             backgroundColor: activeTab === 'users' ? '#007bff' : '#f8f9fa',
