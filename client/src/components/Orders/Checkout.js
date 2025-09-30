@@ -33,6 +33,7 @@ function Checkout() {
       setOrderDetails(order);
       setOrderPlaced(true);
       setCart({ items: [], total: 0 });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error placing order:', error);
       alert('Failed to place order. Please try again.');
@@ -55,7 +56,10 @@ function Checkout() {
           </div>
           <button 
             className="btn btn-primary"
-            onClick={() => window.location.href = '/menu'}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              window.location.href = '/menu';
+            }}
           >
             Continue Shopping
           </button>
@@ -73,7 +77,10 @@ function Checkout() {
           <p>Your cart is empty</p>
           <button 
             className="btn btn-primary"
-            onClick={() => window.location.href = '/menu'}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              window.location.href = '/menu';
+            }}
           >
             Browse Menu
           </button>

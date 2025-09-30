@@ -24,18 +24,23 @@ function Cart({ userId }) {
     if (newQuantity < 1) return;
     try {
       await orderService.updateCartQuantity(cartId, newQuantity);
-      loadCart();
+      await loadCart();
     } catch (error) {
       console.error('Error updating quantity:', error);
+      alert('Failed to update quantity. Please try again.');
     }
   };
 
   const removeFromCart = async (cartId) => {
+    if (!window.confirm('Remove this item from cart?')) return;
+    
     try {
       await orderService.removeFromCart(cartId);
-      loadCart();
+      await loadCart();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Error removing from cart:', error);
+      alert('Failed to remove item. Please try again.');
     }
   };
 
@@ -48,8 +53,13 @@ function Cart({ userId }) {
     try {
       await orderService.createOrder({ user_id: userId });
       setCart({ items: [], total: 0 });
+      // Refresh cart and scroll to top
+      await loadCart();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      alert('Order placed successfully!');
     } catch (error) {
       console.error('Error creating order:', error);
+      alert('Failed to place order. Please try again.');
     } finally {
       setLoading(false);
     }
